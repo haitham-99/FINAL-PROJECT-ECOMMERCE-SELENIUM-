@@ -621,3 +621,24 @@ def test_buy_product_feature_with_guest_account(driver):
     time.sleep(15)
     driver.switch_to.default_content()
     assert price_before_checkout == price_after_checkout
+
+
+# Test Case - Verify that 'Add to Wishlist' only works after login.
+def test_add_to_wishlist_after_login(driver):
+    driver.get("http://www.adidas.co.il/en")
+    driver.set_window_size(1552, 832)
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    actions = ActionChains(driver)
+    men_menu = driver.find_element(By.CSS_SELECTOR, "#women > span")
+    actions.move_to_element(men_menu).perform()
+    time.sleep(4)
+    n = driver.find_element(By.CSS_SELECTOR, "#women-tshirts")
+    actions.move_to_element(n).click().perform()
+    time.sleep(2)
+    img_container = driver.find_element(By.XPATH, "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[2]/div/div/div[1]/a[1]/img")
+    actions.move_to_element(img_container).perform()
+    driver.find_element(By.CSS_SELECTOR, ".show .heart-empty").click()
+    time.sleep(2)
+    driver.find_element(By.ID, "wishlist_count").click()
+    login_message_wishlist = driver.find_element(By.XPATH, "//*[@id=\"maincontent\"]/div/div/div/div[1]/div[2]/div/div[3]/div/p").text
+    assert login_message_wishlist == "Register or Log in to save the item(s) so they won't be lost."

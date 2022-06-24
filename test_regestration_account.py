@@ -1,5 +1,7 @@
 import time
 import pytest
+from selenium.common import ElementNotVisibleException, ElementNotSelectableException, NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome import webdriver
 from selenium.webdriver.firefox import webdriver
 from selenium import webdriver
@@ -7,6 +9,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -456,3 +459,165 @@ def test_incorrect_input_password_reg(driver):
     err_password_message = EC.visibility_of(
         (By.XPATH, "//*[@id=\"form\"]/div[1]/div[1]/div/div/div[13]/div/div/div/div/div[2]"))
     assert bool(err_password_message) is True
+
+
+# Automate 'Search Product' feature
+def test_search_product_feature(driver):
+    driver.get("https://www.adidas.co.il/en")
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    time.sleep(1)
+    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, "#sg-navbar-collapse > .navbar #women").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "Clothing").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "T-Shirts & Tops").click()
+    time.sleep(2)
+    product_name = driver.find_element(By.XPATH,
+                                       "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[1]/div/div/div[2]/div[2]/a").text
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".search_icon_wrapper > img").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".search_form_wrapper .form-control").send_keys(
+        "CROP TEE WITH BINDING DETAILS")
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".search_form_wrapper .form-control").send_keys(Keys.ENTER)
+    product_search_name = driver.find_element(By.XPATH,
+                                              "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[2]/a").text
+    assert product_name == product_search_name
+
+
+# Automate 'Buy Product' feature
+def test_buy_product_feature_with_sign_in(driver):
+    driver.get("http://www.adidas.co.il/en")
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR,
+                        "#sg-navbar-collapse > nav > div.menu-group > ul > li:nth-child(8) > a").click()
+    driver.find_element(By.CSS_SELECTOR, "#login-email").send_keys("haithamodeh57@gmail.com")
+    driver.find_element(By.CSS_SELECTOR, "#login-password").send_keys("Hh123456789+")
+    driver.find_element(By.CSS_SELECTOR, "#ok").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, "#sg-navbar-collapse > .navbar #women").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "Clothing").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "T-Shirts & Tops").click()
+    time.sleep(2)
+    driver.set_window_size(1552, 832)
+    driver.find_element(By.CSS_SELECTOR, ".col-6:nth-child(10) .tile-image").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".swatch-rect-carbon-\\/-white").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".size-radio:nth-child(5) .size-value").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".add-to-cart").click()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, ".add-to-cart")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "body")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .minicart-quantity")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .minicart-quantity").click()
+    time.sleep(2)
+    my_quan = Select(driver.find_element(By.XPATH, "//select[contains(@class,'quantity')]"))
+    my_quan.select_by_visible_text('2')
+    time.sleep(1)
+    price_before_checkout = driver.find_element(By.XPATH,
+                                                "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".checkout-btn").click()
+    time.sleep(2)
+    driver.implicitly_wait(10)
+    iframe = driver.find_element(By.XPATH, "//iframe[contains(@id,'Intrnl_CO_Container')]")
+    driver.switch_to.frame(iframe)
+    price_after_checkout = driver.find_element(By.XPATH,
+                                               "//*[@id=\"itemsTotal\"]/div[1]").text
+    driver.find_element(By.XPATH, "//*[@id=\"CheckoutData_BillingFirstName\"]").click()
+    driver.find_element(By.XPATH, "//*[@id=\"CheckoutData_BillingFirstName\"]").send_keys("hiiiiiiiii")
+    driver.find_element(By.ID, "CheckoutData_BillingLastName").send_keys("odeh")
+    driver.find_element(By.ID, "CheckoutData_Email").send_keys("haithamodeh@gmail.com")
+    driver.find_element(By.ID, "CheckoutData_BillingAddress1").send_keys("taibe")
+    driver.find_element(By.ID, "BillingCity").send_keys("taibe")
+    driver.find_element(By.ID, "BillingZIP").send_keys("1111111")
+    driver.find_element(By.ID, "CheckoutData_BillingPhone").send_keys("0544444444")
+    driver.find_element(By.ID, "btnPay").click()
+    time.sleep(15)
+    driver.switch_to.default_content()
+    assert price_before_checkout == price_after_checkout
+
+
+def test_buy_product_feature_with_guest_account(driver):
+    driver.get("http://www.adidas.co.il/en")
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, "#sg-navbar-collapse > .navbar #women").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "Clothing").click()
+    time.sleep(2)
+    driver.find_element(By.LINK_TEXT, "T-Shirts & Tops").click()
+    time.sleep(2)
+    driver.set_window_size(1552, 832)
+    driver.find_element(By.CSS_SELECTOR, ".col-6:nth-child(10) .tile-image").click()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, ".swatch-rect-carbon-\\/-white").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".size-radio:nth-child(5) .size-value").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".add-to-cart").click()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, ".add-to-cart")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "body")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .minicart-quantity")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .minicart-quantity").click()
+    time.sleep(2)
+    my_quan = Select(driver.find_element(By.XPATH, "//select[contains(@class,'quantity')]"))
+    my_quan.select_by_visible_text('2')
+    time.sleep(1)
+    price_before_checkout = driver.find_element(By.XPATH,
+                                                "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".checkout-btn").click()
+    time.sleep(2)
+
+    driver.find_element(By.CSS_SELECTOR, ".checkout-as-guest").click()
+    driver.implicitly_wait(10)
+    iframe = driver.find_element(By.XPATH, "//iframe[contains(@id,'Intrnl_CO_Container')]")
+    driver.switch_to.frame(iframe)
+    price_after_checkout = driver.find_element(By.XPATH,
+                                               "//*[@id=\"itemsTotal\"]/div[1]").text
+    driver.find_element(By.XPATH, "//*[@id=\"CheckoutData_BillingFirstName\"]").click()
+    driver.find_element(By.XPATH, "//*[@id=\"CheckoutData_BillingFirstName\"]").send_keys("hiiiiiiiii")
+    driver.find_element(By.ID, "CheckoutData_BillingLastName").send_keys("odeh")
+    driver.find_element(By.ID, "CheckoutData_Email").send_keys("haithamodeh@gmail.com")
+    driver.find_element(By.ID, "CheckoutData_BillingAddress1").send_keys("taibe")
+    driver.find_element(By.ID, "BillingCity").send_keys("taibe")
+    driver.find_element(By.ID, "BillingZIP").send_keys("1111111")
+    driver.find_element(By.ID, "CheckoutData_BillingPhone").send_keys("0544444444")
+    driver.find_element(By.ID, "btnPay").click()
+    time.sleep(15)
+    driver.switch_to.default_content()
+    assert price_before_checkout == price_after_checkout

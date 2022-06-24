@@ -635,10 +635,91 @@ def test_add_to_wishlist_after_login(driver):
     n = driver.find_element(By.CSS_SELECTOR, "#women-tshirts")
     actions.move_to_element(n).click().perform()
     time.sleep(2)
-    img_container = driver.find_element(By.XPATH, "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[2]/div/div/div[1]/a[1]/img")
+    img_container = driver.find_element(By.XPATH,
+                                        "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[2]/div/div/div[1]/a[1]/img")
     actions.move_to_element(img_container).perform()
     driver.find_element(By.CSS_SELECTOR, ".show .heart-empty").click()
     time.sleep(2)
     driver.find_element(By.ID, "wishlist_count").click()
-    login_message_wishlist = driver.find_element(By.XPATH, "//*[@id=\"maincontent\"]/div/div/div/div[1]/div[2]/div/div[3]/div/p").text
+    login_message_wishlist = driver.find_element(By.XPATH,
+                                                 "//*[@id=\"maincontent\"]/div/div/div/div[1]/div[2]/div/div[3]/div/p").text
     assert login_message_wishlist == "Register or Log in to save the item(s) so they won't be lost."
+
+
+# Verify that Total Price is reflecting correctly if user changes quantity on 'Shopping Cart Summary' Page.
+def test_Total_Price_is_correct(driver):
+    driver.get("http://www.adidas.co.il/en")
+    driver.set_window_size(1552, 832)
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    actions = ActionChains(driver)
+    men_menu = driver.find_element(By.CSS_SELECTOR, "#men > span")
+    actions.move_to_element(men_menu).perform()
+    time.sleep(4)
+    n = driver.find_element(By.CSS_SELECTOR, "#men-t_shirts")
+    actions.move_to_element(n).click().perform()
+    time.sleep(2)
+    driver.find_element(By.XPATH,
+                        "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[6]/div/div/div[1]/a[1]/img").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".swatch-rect-off-white").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".size-radio:nth-child(3) .size-value").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".add-to-cart > .right_arrow_main").click()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "body")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    element = driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .js--mc-full")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .js--mc-full").click()
+    time.sleep(3)
+    my_quan = Select(driver.find_element(By.XPATH, "//select[contains(@class,'quantity')]"))
+    my_quan.select_by_visible_text('2')
+    time.sleep(1)
+    two_items_price = driver.find_element(By.XPATH,
+                                          "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div/div").text
+    total_price = driver.find_element(By.XPATH,
+                                      "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
+    assert two_items_price == total_price
+
+
+def test_Total_Price_is_correct_3_items(driver):
+    driver.get("http://www.adidas.co.il/en")
+    driver.set_window_size(1552, 832)
+    driver.find_element(By.CSS_SELECTOR, ".affirm").click()
+    actions = ActionChains(driver)
+    men_menu = driver.find_element(By.CSS_SELECTOR, "#men > span")
+    actions.move_to_element(men_menu).perform()
+    time.sleep(4)
+    n = driver.find_element(By.CSS_SELECTOR, "#men-t_shirts")
+    actions.move_to_element(n).click().perform()
+    time.sleep(2)
+    driver.find_element(By.XPATH,
+                        "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[6]/div/div/div[1]/a[1]/img").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".swatch-rect-off-white").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".size-radio:nth-child(3) .size-value").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".add-to-cart > .right_arrow_main").click()
+    time.sleep(2)
+    element = driver.find_element(By.CSS_SELECTOR, "body")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    element = driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .js--mc-full")
+    actions = ActionChains(driver)
+    actions.move_to_element(element).perform()
+    time.sleep(3)
+    driver.find_element(By.CSS_SELECTOR, "#minicartDesktop .minicart-link > .js--mc-full").click()
+    time.sleep(3)
+    my_quan = Select(driver.find_element(By.XPATH, "//select[contains(@class,'quantity')]"))
+    my_quan.select_by_visible_text('3')
+    time.sleep(1)
+    two_items_price = driver.find_element(By.XPATH,
+                                          "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div/div").text
+    total_price = driver.find_element(By.XPATH,
+                                      "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
+    assert two_items_price == total_price

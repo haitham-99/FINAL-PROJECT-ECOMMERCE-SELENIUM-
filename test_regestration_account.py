@@ -723,3 +723,5 @@ def test_Total_Price_is_correct_3_items(driver):
     total_price = driver.find_element(By.XPATH,
                                       "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
     assert two_items_price == total_price
+
+

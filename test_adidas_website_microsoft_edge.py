@@ -26,13 +26,12 @@ def driver():
 
 def test_user_reg(driver):
     driver.get("http://www.adidas.co.il/en")
+    driver.maximize_window()
     driver.find_element(By.CSS_SELECTOR, ".affirm").click()
-    driver.set_window_size(1012, 816)
-    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
-    time.sleep(3)
+    time.sleep(2)
     driver.find_element(By.CSS_SELECTOR,
-                        "#sg-navbar-collapse > nav > div.menu-group > ul > li:nth-child(8) > a").click()
-    time.sleep(3)
+                        'body > div.page > header > nav > div.d-none.d-xl-block.navbar-header.header_inner.utility_nav > div > div > div > a.user_link.login').click()
+    time.sleep(2)
     driver.find_element(By.CSS_SELECTOR, "#form > div.d-flex.justify-content-center.account-login > "
                                          "div.col-s-12.col-l-10.offset-l-1.gl-image > div > div.gl-hspace > "
                                          "div.gl-flex-display > button").click()
@@ -54,12 +53,12 @@ def test_user_reg(driver):
 
 def test_user_signin_successfully(driver):
     driver.get("http://www.adidas.co.il/en")
+    driver.maximize_window()
     driver.find_element(By.CSS_SELECTOR, ".affirm").click()
-    driver.set_window_size(1012, 816)
-    driver.find_element(By.CSS_SELECTOR, ".navbar-toggler:nth-child(1)").click()
-    time.sleep(3)
+    time.sleep(2)
     driver.find_element(By.CSS_SELECTOR,
-                        "#sg-navbar-collapse > nav > div.menu-group > ul > li:nth-child(8) > a").click()
+                        'body > div.page > header > nav > div.d-none.d-xl-block.navbar-header.header_inner.utility_nav > div > div > div > a.user_link.login').click()
+    time.sleep(2)
     driver.find_element(By.CSS_SELECTOR, "#login-email").send_keys("haithamodeh57@gmail.com")
     driver.find_element(By.CSS_SELECTOR, "#login-password").send_keys("Hh123456789+")
     driver.find_element(By.CSS_SELECTOR, "#ok").click()

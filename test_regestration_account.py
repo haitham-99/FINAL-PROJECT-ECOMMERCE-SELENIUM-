@@ -36,7 +36,7 @@ def test_user_reg(driver):
     driver.find_element(By.ID, "login-lastname").send_keys("tes")
     driver.find_element(By.CSS_SELECTOR, ".gl-radio-input__option:nth-child(1) > .gl-radio-input__label").click()
     driver.find_element(By.ID, "login-email").click()
-    driver.find_element(By.ID, "login-email").send_keys("a_tessts_pytest@gmail.com")
+    driver.find_element(By.ID, "login-email").send_keys("a_tesssts_pytest@gmail.com")
     driver.find_element(By.CSS_SELECTOR, "#login-password").send_keys("Hh123456789+")
     time.sleep(3)
     driver.find_element(By.NAME, "age").click()
@@ -719,5 +719,6 @@ def test_Total_Price_is_correct_3_items(driver):
                                           "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[2]/div/div").text
     total_price = driver.find_element(By.XPATH,
                                       "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
+
     assert two_items_price == total_price
 

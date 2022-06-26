@@ -693,15 +693,17 @@ def test_Total_Price_is_correct(driver):
 
 def test_Total_Price_is_correct_3_items(driver):
     driver.get("http://www.adidas.co.il/en")
-    driver.set_window_size(1552, 832)
+    driver.maximize_window()
     driver.find_element(By.CSS_SELECTOR, ".affirm").click()
     actions = ActionChains(driver)
-    men_menu = driver.find_element(By.XPATH, "/html/body/div[2]/header/nav/div[2]/div/div[2]/div[1]/nav/div[2]/ul/li[1]/a/span")
+    men_menu = driver.find_element(By.XPATH,
+                                   "/html/body/div[2]/header/nav/div[2]/div/div[2]/div[1]/nav/div[2]/ul/li[1]/a/span")
     actions.move_to_element(men_menu).perform()
     time.sleep(2)
     n = driver.find_element(By.XPATH, "//*[@id=\"men-t_shirts\"]")
-    # actions.move_to_element(n).perform()
-    driver.find_element(By.XPATH, "//*[@id=\"men-t_shirts\"]").click()
+    # actions.move_to_element(n).click().perform()
+    driver.execute_script("arguments[0].click", n)
+    # driver.find_element(By.XPATH, "//*[@id=\"men-t_shirts\"]").click()
     time.sleep(2)
     driver.find_element(By.XPATH,
                         "//*[@id=\"product-search-results\"]/div[2]/div[2]/div[2]/div/div[1]/div[6]/div/div/div[1]/a[1]/img").click()
@@ -729,4 +731,3 @@ def test_Total_Price_is_correct_3_items(driver):
     total_price = driver.find_element(By.XPATH,
                                       "//*[@id=\"maincontent\"]/div/div[4]/div[3]/div[2]/div[6]/div[5]/div[2]/p").text
     assert two_items_price == total_price
-

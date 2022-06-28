@@ -9,6 +9,5 @@ this is the first part of the final project which is automating functional featu
 * add to wishlist feature test
 * Buy product
 * etc...
-
-The tests are written with python, they work in 3 browser:Chrome, Ms edge and Firefox. and it works with android emulator using android studio running by appium server
+The tests are written with python, they work in 3 browsers: Chrome, Ms Edge, and Firefox. and it works with an android emulator using android studio running by appium server
 Email: Haitham1999_odeh@hotmail.com

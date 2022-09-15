@@ -1,6 +1,6 @@
 # FINAL-PROJECT-ECOMMERCE-SELENIUM-
-The final project for BEYOND DEV which I intend in a QA Automation Development Bootcamp, 
-this is the first part of the final project which is automating functional features of [Adidas. com](https://www.adidas.co.il/en) website.
+
+project which is automating functional features of [Adidas.com](https://www.adidas.co.il/en) website.
 
 * Registering new account test
 * Log in-process test
